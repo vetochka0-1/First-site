@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Экономика моего региона в цифрах</title>
+<style>
+  :root{
+    --bg:#0f172a;
+    --bg-soft:#f8fafc;
+    --card:#ffffff;
+    --ink:#0f172a;
+    --muted:#64748b;
+    --accent:#2563eb;
+    --accent-2:#0ea5e9;
+    --green:#16a34a;
+    --amber:#f59e0b;
+    --line:#e2e8f0;
+    --radius:16px;
+    --shadow:0 10px 30px rgba(15,23,42,.08);
+  }
+
+  *{box-sizing:border-box;}
+
+  html,body{margin:0;padding:0;}
+
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    background:
+      radial-gradient(circle at 10% 0%, rgba(37,99,235,.10), transparent 45%),
+      radial-gradient(circle at 90% 5%, rgba(14,165,233,.10), transparent 40%),
+      var(--bg-soft);
+    color:var(--ink);
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .wrap{
+    max-width:1060px;
+    margin:0 auto;
+    padding:0 18px;
+  }
+
+  /* ---------- HEADER ---------- */
+  header.hero{
+    position:relative;
+    overflow:hidden;
+    background:linear-gradient(135deg,#0f172a 0%, #1e3a8a 55%, #0ea5e9 130%);
+    color:#fff;
+    padding:56px 0 64px;
+    border-bottom-left-radius:28px;
+    border-bottom-right-radius:28px;
+  }
+
+  header.hero::after{
+    content:"";
+    position:absolute;
+    inset:auto -80px -120px auto;
+    width:340px;
+    height:340px;
+    border-radius:50%;
+    background:radial-gradient(circle, rgba(255,255,255,.18), transparent 65%);
+    pointer-events:none;
+  }
+
+  .eyebrow{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    font-size:.8rem;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    font-weight:700;
+    padding:7px 14px;
+    border-radius:999px;
+    background:rgba(255,255,255,.14);
+    border:1px solid rgba(255,255,255,.22);
+    backdrop-filter:blur(6px);
+  }
+
+  h1{
+    margin:18px 0 10px;
+    font-size:clamp(1.7rem, 4.6vw, 2.9rem);
+    line-height:1.15;
+    letter-spacing:-.02em;
+    font-weight:800;
+    max-width:22ch;
+  }
+
+  .hero p.lead{
+    margin:0;
+    max-width:58ch;
+    color:#dbeafe;
+    font-size:clamp(.95rem, 2.2vw, 1.05rem);
+  }
+
+  .hero-stats{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(140px, 1fr));
+    gap:12px;
+    margin-top:30px;
+  }
+
+  .hero-stat{
+    background:rgba(255,255,255,.10);
+    border:1px solid rgba(255,255,255,.2);
+    border-radius:14px;
+    padding:14px 16px;
+    backdrop-filter:blur(8px);
+  }
+
+  .hero-stat b{
+    display:block;
+    font-size:1.35rem;
+    font-weight:800;
+    letter-spacing:-.01em;
+  }
+
+  .hero-stat span{
+    font-size:.8rem;
+    color:#c7d7f5;
+  }
+
+  /* ---------- SECTIONS ---------- */
+  main{padding:38px 0 10px;}
+
+  .section-title{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin:0 0 18px;
+    font-size:clamp(1.15rem, 3vw, 1.45rem);
+    font-weight:800;
+    letter-spacing:-.01em;
+  }
+
+  .section-title .dot{
+    width:10px;
+    height:26px;
+    border-radius:6px;
+    background:linear-gradient(180deg,var(--accent),var(--accent-2));
+    flex:none;
+  }
+
+  .cards{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));
+    gap:16px;
+  }
+
+  .card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:22px;
+    box-shadow:var(--shadow);
+    position:relative;
+    overflow:hidden;
+    transition:transform .2s ease, box-shadow .2s ease;
+  }
+
+  .card:hover{
+    transform:translateY(-3px);
+    box-shadow:0 16px 34px rgba(15,23,42,.12);
+  }
+
+  .card .icon{
+    width:46px;
+    height:46px;
+    border-radius:12px;
+    display:grid;
+    place-items:center;
+    font-size:1.4rem;
+    margin-bottom:14px;
+    color:#fff;
+    font-weight:700;
+  }
+
+  .icon.blue{background:linear-gradient(135deg,#2563eb,#0ea5e9);}
+  .icon.green{background:linear-gradient(135deg,#16a34a,#4ade80);}
+  .icon.amber{background:linear-gradient(135deg,#f59e0b,#fbbf24);}
+
+  .card h3{
+    margin:0 0 8px;
+    font-size:1.05rem;
+    font-weight:700;
+  }
+
+  .card p{
+    margin:0 0 14px;
+    color:var(--muted);
+    font-size:.92rem;
+  }
+
+  .metric{
+    display:flex;
+    align-items:baseline;
+    gap:8px;
+    flex-wrap:wrap;
+  }
+
+  .metric b{
+    font-size:1.7rem;
+    font-weight:800;
+    letter-spacing:-.02em;
+    color:var(--ink);
+  }
+
+  .metric small{
+    font-size:.82rem;
+    color:var(--muted);
+  }
+
+  .bar{
+    margin-top:14px;
+    height:9px;
+    border-radius:99px;
+    background:#eef2f7;
+    overflow:hidden;
+  }
+
+  .bar > i{
+    display:block;
+    height:100%;
+    border-radius:99px;
+    background:linear-gradient(90deg,var(--accent),var(--accent-2));
+    animation:grow 1.2s ease-out both;
+  }
+
+  .bar.green > i{background:linear-gradient(90deg,#16a34a,#4ade80);}
+  .bar.amber > i{background:linear-gradient(90deg,#f59e0b,#fbbf24);}
+
+  @keyframes grow{from{width:0;}}
+
+  /* ---------- TABLE ---------- */
+  .table-block{
+    margin-top:38px;
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    overflow:hidden;
+  }
+
+  .table-head{
+    padding:20px 22px 6px;
+  }
+
+  .table-head h3{
+    margin:0 0 4px;
+    font-size:1.05rem;
+  }
+
+  .table-head p{
+    margin:0 0 14px;
+    color:var(--muted);
+    font-size:.86rem;
+  }
+
+  .table-scroll{
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+  }
+
+  table{
+    width:100%;
+    border-collapse:collapse;
+    min-width:560px;
+    font-size:.92rem;
+  }
+
+  thead th{
+    text-align:left;
+    padding:13px 22px;
+    background:#f1f5f9;
+    color:#334155;
+    font-size:.78rem;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    font-weight:800;
+    border-top:1px solid var(--line);
+    border-bottom:1px solid var(--line);
+    white-space:nowrap;
+  }
+
+  tbody td{
+    padding:13px 22px;
+    border-bottom:1px solid var(--line);
+    vertical-align:middle;
+  }
+
+  tbody tr:last-child td{border-bottom:none;}
+  tbody tr:nth-child(even){background:#fbfdff;}
+
+  td.num{
+    font-variant-numeric:tabular-nums;
+    font-weight:700;
+    white-space:nowrap;
+  }
+
+  .delta{
+    display:inline-block;
+    padding:3px 9px;
+    border-radius:999px;
+    font-size:.78rem;
+    font-weight:800;
+    white-space:nowrap;
+  }
+
+  .delta.up{background:#e7f8ee;color:#15803d;}
+  .delta.down{background:#fef2f2;color:#b91c1c;}
+  .delta.flat{background:#eef2f7;color:#475569;}
+
+  .note{
+    padding:12px 22px 20px;
+    color:var(--muted);
+    font-size:.8rem;
+  }
+
+  /* ---------- FOOTER ---------- */
+  footer{
+    margin-top:44px;
+    background:linear-gradient(135deg,#0f172a,#1e293b);
+    color:#cbd5e1;
+    padding:30px 0;
+    border-top-left-radius:24px;
+    border-top-right-radius:24px;
+  }
+
+  .footer-inner{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    justify-content:space-between;
+    gap:14px;
+  }
+
+  .author{
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+
+  .avatar{
+    width:44px;
+    height:44px;
+    border-radius:50%;
+    display:grid;
+    place-items:center;
+    font-weight:800;
+    color:#fff;
+    background:linear-gradient(135deg,#2563eb,#0ea5e9);
+    flex:none;
+    font-size:.95rem;
+  }
+
+  .author b{display:block;color:#fff;font-size:.95rem;}
+  .author span{font-size:.8rem;color:#94a3b8;}
+
+  footer .meta{
+    font-size:.8rem;
+    color:#94a3b8;
+  }
+
+  @media (max-width:520px){
+    header.hero{padding:40px 0 48px;border-radius:0 0 22px 22px;}
+    .card{padding:18px;}
+    thead th, tbody td{padding:11px 14px;}
+    .table-head, .note{padding-left:14px;padding-right:14px;}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <span class="eyebrow">Инфографика · 2025</span>
+    <h1>Экономика моего региона в цифрах</h1>
+    <p class="lead">Коротко о главном: как растёт валовый продукт, где работают люди и сколько инвестиций приходит в наш город. Данные — учебно-демонстрационные.</p>
+
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <b>412 млрд ₽</b>
+        <span>Валовый региональный продукт</span>
+      </div>
+      <div class="hero-stat">
+        <b>+4,2%</b>
+        <span>Рост экономики за год</span>
+      </div>
+      <div class="hero-stat">
+        <b>318 тыс.</b>
+        <span>Занятых в экономике</span>
+      </div>
+      <div class="hero-stat">
+        <b>64,7 млрд ₽</b>
+        <span>Инвестиции в основной капитал</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section aria-labelledby="s1">
+    <h2 class="section-title" id="s1"><span class="dot"></span>Производство и рост</h2>
+    <div class="cards">
+
+      <article class="card">
+        <div class="icon blue">ВРП</div>
+        <h3>Валовый региональный продукт</h3>
+        <p>Главный показатель объёма произведённых товаров и услуг на территории региона.</p>
+        <div class="metric"><b>412</b><small>млрд ₽ за год</small></div>
+        <div class="bar"><i style="width:78%"></i></div>
+      </article>
+
+      <article class="card">
+        <div class="icon green">↑</div>
+        <h3>Темп роста экономики</h3>
+        <p>Реальный прирост ВРП с учётом инфляции относительно прошлого года.</p>
+        <div class="metric"><b>+4,2%</b><small>к предыдущему году</small></div>
+        <div class="bar green"><i style="width:62%"></i></div>
+      </article>
+
+      <article class="card">
+        <div class="icon amber">П</div>
+        <h3>Промышленное производство</h3>
+        <p>Индекс выпуска обрабатывающих отраслей и добычи полезных ископаемых.</p>
+        <div class="metric"><b>107,5</b><small>индекс к базовому году</small></div>
+        <div class="bar amber"><i style="width:70%"></i></div>
+      </article>
+
+    </div>
+  </section>
+
+  <section aria-labelledby="s2" style="margin-top:34px;">
+    <h2 class="section-title" id="s2"><span class="dot"></span>Люди и занятость</h2>
+    <div class="cards">
+
+      <article class="card">
+        <div class="icon blue">Л</div>
+        <h3>Численность населения</h3>
+        <p>Постоянное население города и прилегающих районов.</p>
+        <div class="metric"><b>742 тыс.</b><small>человек</small></div>
+        <div class="bar"><i style="width:74%"></i></div>
+      </article>
+
+      <article class="card">
+        <div class="icon green">З</div>
+        <h3>Занятость</h3>
+        <p>Доля жителей, занятых в экономике региона.</p>
+        <div class="metric"><b>318 тыс.</b><small>занятых</small></div>
+        <div class="bar green"><i style="width:81%"></i></div>
+      </article>
+
+      <article class="card">
+        <div class="icon amber">₽</div>
+        <h3>Средняя зарплата</h3>
+        <p>Среднемесячная номинальная начисленная заработная плата.</p>
+        <div class="metric"><b>68 400 ₽</b><small>в месяц</small></div>
+        <div class="bar amber"><i style="width:66%"></i></div>
+      </article>
+
+    </div>
+  </section>
+
+  <section aria-labelledby="s3" style="margin-top:34px;">
+    <h2 class="section-title" id="s3"><span class="dot"></span>Инвестиции и бизнес</h2>
+    <div class="cards">
+
+      <article class="card">
+        <div class="icon blue">И</div>
+        <h3>Инвестиции в основной капитал</h3>
+        <p>Вложения компаний и государства в развитие производств и инфраструктуры.</p>
+        <div class="metric"><b>64,7</b><small>млрд ₽</small></div>
+        <div class="bar"><i style="width:69%"></i></div>
+      </article>
+
+      <article class="card">
+        <div class="icon green">М</div>
+        <h3>Малое и среднее предпринимательство</h3>
+        <p>Количество зарегистрированных субъектов МСП в регионе.</p>
+        <div class="metric"><b>24,3 тыс.</b><small>компаний и ИП</small></div>
+        <div class="bar green"><i style="width:58%"></i></div>
+      </article>
+
+      <article class="card">
+        <div class="icon amber">Э</div>
+        <h3>Внешнеторговый оборот</h3>
+        <p>Суммарный объём экспорта и импорта предприятий региона.</p>
+        <div class="metric"><b>1,9</b><small>млрд $</small></div>
+        <div class="bar amber"><i style="width:52%"></i></div>
+      </article>
+
+    </div>
+  </section>
+
+  <section class="table-block" aria-labelledby="t1">
+    <div class="table-head">
+      <h3 id="t1">Ключевые показатели за 3 года</h3>
+      <p>Сводная таблица: значение показателя и изменение к предыдущему году.</p>
+    </div>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Показатель</th>
+            <th>2023</th>
+            <th>2024</th>
+            <th>2025</th>
+            <th>Динамика</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>ВРП, млрд ₽</td>
+            <td class="num">358</td>
+            <td class="num">385</td>
+            <td class="num">412</td>
+            <td><span class="delta up">▲ +7,0%</span></td>
+          </tr>
+          <tr>
+            <td>Промышленное производство, индекс</td>
+            <td class="num">98,4</td>
+            <td class="num">102,1</td>
+            <td class="num">107,5</td>
+            <td><span class="delta up">▲ +5,3%</span></td>
+          </tr>
+          <tr>
+            <td>Инвестиции в основной капитал, млрд ₽</td>
+            <td class="num">52,1</td>
+            <td class="num">58,9</td>
+            <td class="num">64,7</td>
+            <td><span class="delta up">▲ +9,8%</span></td>
+          </tr>
+          <tr>
+            <td>Занятые в экономике, тыс. человек</td>
+            <td class="num">305</td>
+            <td class="num">312</td>
+            <td class="num">318</td>
+            <td><span class="delta up">▲ +1,9%</span></td>
+          </tr>
+          <tr>
+            <td>Средняя зарплата, ₽</td>
+            <td class="num">58 900</td>
+            <td class="num">63 200</td>
+            <td class="num">68 400</td>
+            <td><span class="delta up">▲ +8,2%</span></td>
+          </tr>
+          <tr>
+            <td>Субъекты МСП, тыс.</td>
+            <td class="num">22,6</td>
+            <td class="num">23,4</td>
+            <td class="num">24,3</td>
+            <td><span class="delta up">▲ +3,8%</span></td>
+          </tr>
+          <tr>
+            <td>Безработица, %</td>
+            <td class="num">3,4</td>
+            <td class="num">3,1</td>
+            <td class="num">2,8</td>
+            <td><span class="delta up">▼ −0,3 п.п.</span></td>
+          </tr>
+          <tr>
+            <td>Внешнеторговый оборот, млрд $</td>
+            <td class="num">1,7</td>
+            <td class="num">1,8</td>
+            <td class="num">1,9</td>
+            <td><span class="delta flat">≈ +5,6%</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">Данные приведены в учебно-демонстрационных целях и не являются официальной статистикой.</p>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap footer-inner">
+    <div class="author">
+      <div class="avatar">АИ</div>
+      <div>
+        <b>Иванова Анна</b>
+        <span>Автор проекта · 10 класс</span>
+      </div>
+    </div>
+    <div class="meta">Инфографика «Экономика моего региона в цифрах» · 2025</div>
+  </div>
+</footer>
+
+</body>
+</html>
